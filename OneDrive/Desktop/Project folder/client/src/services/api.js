@@ -1,6 +1,7 @@
 import axios from "axios";
 
-const apiOrigin = (import.meta.env.VITE_API_URL || "").replace(/\/+$/, "");
+const defaultProductionApiUrl = "https://api-civiceye-ai.onrender.com";
+const apiOrigin = (import.meta.env.VITE_API_URL || (import.meta.env.PROD ? defaultProductionApiUrl : "")).replace(/\/+$/, "");
 const api = axios.create({ baseURL: apiOrigin ? `${apiOrigin}/api` : "/api", timeout: 30000 });
 
 export function getAssetUrl(path) {

@@ -1,6 +1,6 @@
 # Deploy CivicEye with Render and Vercel
 
-This guide deploys the Express API to Render and the React/Vite frontend to Vercel. The repository is an npm workspace monorepo; keep the Vercel project root at the repository root.
+This guide deploys the Express API to Render and the React/Vite frontend to Vercel. In this GitHub repository, the CivicEye app is in the `OneDrive/Desktop/Project folder` subdirectory, not at the repository root. Set the project root directory to that relative path on both hosting services so they can find `package.json`.
 
 ## 1. Prepare and push the repository to GitHub
 
@@ -32,7 +32,7 @@ Replace the GitHub URL with your repository URL. Review `git status --short` bef
 ## 2. Deploy the API on Render
 
 1. In Render, create a **Web Service** and connect the GitHub repository.
-2. Leave **Root Directory** empty (repository root).
+2. Set **Root Directory** to `OneDrive/Desktop/Project folder` (relative to the GitHub repository root; do not include a drive letter).
 3. Use these settings:
    - Runtime: **Node**
    - Build command: `npm install`
@@ -60,14 +60,14 @@ The MVP stores uploaded photos on the API filesystem. Render filesystems are eph
 ## 3. Deploy the frontend on Vercel
 
 1. In Vercel, **Add New → Project**, import the same GitHub repository.
-2. Keep **Root Directory** set to the repository root. The root `vercel.json` builds the client workspace and publishes `client/dist`.
-3. Add this environment variable to the Vercel project:
+2. Set **Root Directory** to `OneDrive/Desktop/Project folder`. The `vercel.json` in that directory builds the client workspace and publishes `client/dist`.
+3. The production API defaults to `https://api-civiceye-ai.onrender.com`. If you deploy the backend under a different domain, add or override this environment variable in Vercel:
 
    | Key | Value |
    | --- | --- |
    | `VITE_API_URL` | Render API origin, e.g. `https://your-api.onrender.com` (no trailing slash and no `/api`) |
 
-   Set it for Production and for Preview deployments if you use previews. Vite embeds `VITE_` variables at build time; redeploy after changing one.
+   Set visibility to **Config**, not Secret, and select Production (and Preview if desired). This is a public API address, not a credential. Vite embeds `VITE_` variables at build time, so redeploy after changing it. For the default Render API URL, this variable may be omitted.
 4. Deploy the project and copy its production domain, e.g. `https://your-project.vercel.app`.
 5. Go back to Render and set `CLIENT_ORIGIN` to that exact Vercel origin (scheme and host only, no path or trailing slash). If you need both a custom domain and the Vercel domain, provide comma-separated origins, for example `https://civiceye.example,https://your-project.vercel.app`. Save the change and redeploy/restart the Render service.
 
