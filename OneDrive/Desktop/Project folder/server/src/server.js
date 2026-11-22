@@ -29,7 +29,14 @@ app.use(cors({
   }
 }));
 app.use(express.json({ limit: "1mb" }));
-app.use("/uploads", express.static(uploadDirectory));
+app.use(
+  "/uploads",
+  (_req, res, next) => {
+    res.setHeader("Cross-Origin-Resource-Policy", "cross-origin");
+    next();
+  },
+  express.static(uploadDirectory)
+);
 app.use("/api", rateLimit({ windowMs: 15 * 60 * 1000, limit: 300, standardHeaders: "draft-7", legacyHeaders: false }));
 app.get("/api/health", (_req, res) => res.json({ success: true, status: "ok" }));
 app.use("/api/complaints", complaintRoutes);
